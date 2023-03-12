@@ -4,13 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:simple_mangadex_api/exceptions.dart';
 
 class Chapter {
+  String id;
   String userSetTitle;
   final Map<String, String> titles;
   final String chapterString;
   final List<String> others;
   final int count;
   final List<Relationship> relationships;
-  String id;
   String? title;
   String? translatedLanguage;
   int? pages;
@@ -24,6 +24,10 @@ class Chapter {
       throw OperationOnErrStateChapterException();
     }
     return _imageLinks!;
+  }
+
+  List<String>? get imageLinksFallible {
+    return _imageLinks;
   }
 
   Future<List<String>> get imageLinks async {
@@ -289,7 +293,8 @@ class Manga {
     final List<Relationship> relationships =
         (decodedBody['data']['relationships'] as List<dynamic>)
             .cast<Map<String, dynamic>>()
-            .map((relationship) => Relationship.fromMap(relationship)).toList();
+            .map((relationship) => Relationship.fromMap(relationship))
+            .toList();
 
     final coverArtId =
         relationships.singleWhere((element) => element.type == "cover_art").id;
@@ -315,7 +320,8 @@ class Manga {
       final version = attributes['version'] as int;
       final relationships =
           ((attributes['relationships'] as List<dynamic>?) ?? [])
-              .map((relationship) => Relationship.fromMap(relationship)).toList();
+              .map((relationship) => Relationship.fromMap(relationship))
+              .toList();
 
       return Tag(
           group: group,
@@ -397,6 +403,11 @@ class Manga {
 
   List<Chapter> get sortedChapters {
     return chapters.reversed.toList();
+  }
+
+  List<String> get formattedTags {
+    return tags.map((tag) => tag.tagNames.values).fold<List<String>>(
+        [], (previousValue, element) => [...previousValue, ...element]);
   }
 
   static Future<bool> isValidId(String mangaId) async {

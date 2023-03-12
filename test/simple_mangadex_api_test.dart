@@ -18,8 +18,6 @@ void main() {
       ),
     );
 
-    for (var chapter in result.sortedChapters) {
-      print(chapter.others.toString());
-    }
+    print(result.formattedTags.toString());
   });
 }
