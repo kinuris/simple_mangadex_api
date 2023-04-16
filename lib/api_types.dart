@@ -410,6 +410,7 @@ class Manga {
         [], (previousValue, element) => [...previousValue, ...element]);
   }
 
+  // FIXME
   static Future<bool> isValidId(String mangaId) async {
     final res = await http.get(
       Uri.parse("https://api.mangadex.org/manga/$mangaId"),
